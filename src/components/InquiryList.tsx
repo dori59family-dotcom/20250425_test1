@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Download, RefreshCw, Search, Loader2, AlertCircle, Inbox, Mail, Sparkles, X, CheckCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+
 import { fetchInquiries, saveReply } from '../lib/supabase';
 import { generateReply } from '../lib/gemini';
 import type { InquiryData } from '../types/inquiry';
@@ -75,43 +75,12 @@ const InquiryList: React.FC = () => {
     }
   };
 
-  const handleGmailSend = async () => {
+  const handleGmailSend = () => {
     if (!selectedInquiry || !modalReply) return;
-    
-    setIsSavingReply(true);
-    try {
-      // EmailJS를 이용한 백그라운드 자동 발송
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error('EmailJS 설정(환경변수)이 필요합니다.');
-      }
-
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          to_email: selectedInquiry.customer_email,
-          from_name: 'KB금융그룹 고객센터',
-          reply_text: modalReply,
-          receipt_number: selectedInquiry.receipt_number,
-        },
-        publicKey
-      );
-
-      alert('이메일이 고객님께 자동으로 발송되었습니다! (Gmail 창을 열지 않음)');
-    } catch (err) {
-      alert(`발송 실패: ${err instanceof Error ? err.message : '설정값을 확인해 주세요.'}`);
-      // 실패 시 대안으로 기존 Gmail 창 열기 방식 실행
-      const subject = encodeURIComponent(`[KB금융] 문의 답변 (접수번호: ${selectedInquiry.receipt_number})`);
-      const body = encodeURIComponent(modalReply);
-      const to = encodeURIComponent(selectedInquiry.customer_email);
-      window.open(`https://mail.google.com/mail/?view=cm&to=${to}&su=${subject}&body=${body}`, '_blank');
-    } finally {
-      setIsSavingReply(false);
-    }
+    const subject = encodeURIComponent(`[KB금융] 문의 답변 (접수번호: ${selectedInquiry.receipt_number})`);
+    const body = encodeURIComponent(modalReply);
+    const to = encodeURIComponent(selectedInquiry.customer_email);
+    window.open(`https://mail.google.com/mail/?view=cm&to=${to}&su=${subject}&body=${body}`, '_blank');
   };
 
   const downloadCSV = () => {
