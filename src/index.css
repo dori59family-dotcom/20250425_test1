@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans;
+  }
+}
+
+@layer components {
+  .btn-kb {
+    @apply px-6 py-3 rounded-xl font-bold transition-all duration-200 flex items-center justify-center gap-2 active:scale-95;
+  }
+  .btn-primary {
+    @apply bg-amber-400 text-amber-950 hover:bg-amber-500 shadow-lg shadow-amber-200;
+  }
+  .btn-secondary {
+    @apply bg-slate-200 text-slate-700 hover:bg-slate-300;
+  }
+  .card-kb {
+    @apply bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden;
+  }
+}
+
+/* KB Style Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-colors;
+}
