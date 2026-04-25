@@ -1,54 +1,75 @@
-import React from 'react';
-import { Globe, BookOpen, Activity, UserCircle } from 'lucide-react';
-import SSKResearchAgent from './SSKResearchAgent';
+import React, { useState } from 'react';
+import { MessageSquare, List, Building2, ShieldCheck } from 'lucide-react';
+import InquiryForm from './InquiryForm';
+import InquiryList from './InquiryList';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 const Layout: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'form' | 'list'>('form');
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#fcfdfe]">
-      {/* Top Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200">
-              <Activity className="text-emerald-400 w-7 h-7" />
+    <div className="min-h-screen bg-[#f8fafc] font-sans text-slate-900">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center gap-3">
+              <div className="bg-amber-400 p-2.5 rounded-2xl shadow-lg shadow-amber-100">
+                <Building2 className="text-amber-950 w-7 h-7" />
+              </div>
+              <div>
+                <h1 className="text-xl font-black tracking-tight text-slate-800">
+                  KB <span className="text-amber-500 underline decoration-4 underline-offset-4">AI Inquiry</span> System
+                </h1>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                  KB Financial Customer Service Intelligence
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                SSK <span className="text-emerald-600">Global Agenda</span>
-              </h1>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                AI Research Intelligence Platform
-              </p>
-            </div>
-          </div>
-          
-          <div className="hidden lg:flex items-center gap-8">
-            <nav className="flex items-center gap-6">
-              {[
-                { name: 'Research Center', icon: <BookOpen size={16} />, active: true },
-                { name: 'Global Network', icon: <Globe size={16} />, active: false },
-              ].map((item) => (
-                <button
-                  key={item.name}
-                  className={`flex items-center gap-2 text-sm font-bold transition-all px-2 py-1 ${
-                    item.active 
-                      ? 'text-slate-900 border-b-2 border-emerald-500' 
-                      : 'text-slate-400 hover:text-slate-600'
-                  }`}
-                >
-                  {item.icon}
-                  {item.name}
-                </button>
-              ))}
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+              <button
+                onClick={() => setActiveTab('form')}
+                className={cn(
+                  "flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all",
+                  activeTab === 'form' 
+                    ? "bg-white text-amber-600 shadow-sm" 
+                    : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                )}
+              >
+                <MessageSquare size={18} />
+                문의하기
+              </button>
+              <button
+                onClick={() => setActiveTab('list')}
+                className={cn(
+                  "flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all",
+                  activeTab === 'list' 
+                    ? "bg-white text-amber-600 shadow-sm" 
+                    : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                )}
+              >
+                <List size={18} />
+                문의 내역
+              </button>
             </nav>
-            <div className="h-6 w-px bg-slate-200 mx-2" />
-            <div className="flex items-center gap-3 pl-4">
-              <div className="text-right">
-                <p className="text-xs font-bold text-slate-900">Dr. Lee Sang-yun</p>
-                <p className="text-[10px] text-slate-400 font-medium">Senior Researcher</p>
+
+            <div className="flex items-center gap-3">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs font-bold text-slate-700">관리자 모드</p>
+                <p className="text-[10px] text-emerald-500 font-bold flex items-center justify-end gap-1">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                  System Active
+                </p>
               </div>
               <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200">
-                <UserCircle className="text-slate-400 w-8 h-8" />
+                <ShieldCheck size={20} className="text-slate-400" />
               </div>
             </div>
           </div>
@@ -56,51 +77,26 @@ const Layout: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pb-20">
-        <SSKResearchAgent />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="mb-10 text-center space-y-2">
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight">
+            {activeTab === 'form' ? '고객 문의 자동 분류' : '전체 문의 관리 대시보드'}
+          </h2>
+          <p className="text-slate-500 font-medium">
+            {activeTab === 'form' 
+              ? 'Gemini AI가 문의 내용을 분석하여 담당 부서와 응대 스크립트를 즉시 생성합니다.' 
+              : '접수된 모든 문의 사항을 모니터링하고 이메일 답변을 발송합니다.'}
+          </p>
+        </div>
+
+        {activeTab === 'form' ? <InquiryForm /> : <InquiryList />}
       </main>
 
-      {/* Modern Academic Footer */}
-      <footer className="bg-white py-12 border-t border-slate-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-            <div className="space-y-4 max-w-md">
-              <h2 className="text-lg font-black text-slate-900">SSK Global Agenda</h2>
-              <p className="text-sm text-slate-400 leading-relaxed font-medium">
-                우리는 기후 기술 혁신과 사회적 수용성 사이의 관계를 연구하여 지속 가능한 미래를 위한 학술적 토대를 마련합니다. 인내자본의 역할과 글로벌 기후 거버넌스의 발전을 위해 데이터를 분석합니다.
-              </p>
-            </div>
-            <div className="flex gap-12 text-sm">
-              <div className="space-y-3">
-                <h4 className="font-bold text-slate-900">Resources</h4>
-                <ul className="space-y-2 text-slate-500 font-medium">
-                  <li><a href="#" className="hover:text-emerald-600">Research Papers</a></li>
-                  <li><a href="#" className="hover:text-emerald-600">Policy Briefs</a></li>
-                  <li><a href="#" className="hover:text-emerald-600">Data Repositories</a></li>
-                </ul>
-              </div>
-              <div className="space-y-3">
-                <h4 className="font-bold text-slate-900">Contact</h4>
-                <p className="text-slate-500 font-medium">info@ssk-global.org</p>
-                <div className="flex gap-4 mt-4">
-                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
-                    <Globe size={14} className="text-slate-400" />
-                  </div>
-                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
-                    <Activity size={14} className="text-slate-400" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-slate-50 flex justify-between items-center text-[11px] text-slate-300 font-bold uppercase tracking-wider">
-            <p>© 2026 SSK GLOBAL AGENDA RESEARCH GROUP. ALL RIGHTS RESERVED.</p>
-            <div className="flex gap-6">
-              <span>Privacy Policy</span>
-              <span>Terms of Service</span>
-            </div>
-          </div>
-        </div>
+      {/* Footer */}
+      <footer className="mt-auto py-8 bg-white border-t border-slate-200 text-center">
+        <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">
+          © 2026 KB Financial Group AI Intelligence Center. All Rights Reserved.
+        </p>
       </footer>
     </div>
   );
