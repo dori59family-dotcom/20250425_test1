@@ -92,11 +92,13 @@ const InquiryForm: React.FC = () => {
         inquiry: inquiryText,
         ...result,
       });
+      // 저장 성공 시 모든 입력 및 분석 상태 초기화
       setSaveSuccess(receiptNumber);
       setShowEmailModal(false);
       setInquiryText('');
       setCustomerEmail('');
-      setResult(null);
+      setResult(null); 
+      setQuestions([]); // 추천 질문도 초기화
     } catch (err) {
       setError(err instanceof Error ? err.message : '저장 도중 오류가 발생했습니다.');
     } finally {

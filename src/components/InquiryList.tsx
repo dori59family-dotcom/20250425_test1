@@ -171,7 +171,11 @@ const InquiryList: React.FC = () => {
                 </td></tr>
               ) : (
                 filtered.map((inquiry) => (
-                  <tr key={inquiry.id} className="hover:bg-slate-50/50 transition-colors group">
+                  <tr 
+                    key={inquiry.id} 
+                    onClick={() => openDetail(inquiry)}
+                    className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
+                  >
                     <td className="px-4 py-4">
                       <span className="font-mono text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">{inquiry.receipt_number}</span>
                     </td>
@@ -203,10 +207,9 @@ const InquiryList: React.FC = () => {
                     </td>
                     <td className="px-4 py-4 text-center">
                       <button
-                        onClick={() => openDetail(inquiry)}
                         className="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
                       >
-                        답변하기
+                        상세보기
                       </button>
                     </td>
                   </tr>
@@ -239,30 +242,53 @@ const InquiryList: React.FC = () => {
               </button>
             </div>
 
-            {/* 문의 내용 요약 */}
-            <div className="px-6 py-4 bg-slate-50 border-b border-slate-100">
-              <p className="text-xs text-slate-400 font-bold mb-1">문의 내용</p>
-              <p className="text-sm text-slate-700">{selectedInquiry.inquiry}</p>
+            {/* 문의 내용 요약 및 상세 정보 */}
+            <div className="px-6 py-4 bg-slate-50 border-b border-slate-100 grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">카테고리 / 긴급도</p>
+                <p className="text-sm font-bold text-slate-700">
+                  {selectedInquiry.category} · <span className={cn(
+                    selectedInquiry.urgency === '높음' ? "text-red-500" : "text-amber-500"
+                  )}>{selectedInquiry.urgency}</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">담당부서</p>
+                <p className="text-sm font-bold text-slate-700">{selectedInquiry.department}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">문의 원문</p>
+                <p className="text-sm text-slate-600 leading-relaxed bg-white p-3 rounded-xl border border-slate-100 italic">
+                  "{selectedInquiry.inquiry}"
+                </p>
+              </div>
             </div>
 
             {/* 답변 영역 */}
             <div className="p-6 flex-1 overflow-y-auto space-y-4">
-              {modalReply ? (
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-bold text-slate-800 flex items-center gap-1">
+                  <Sparkles size={14} className="text-amber-500" />
+                  이메일 답변 내용
+                </p>
+                {replySaved && (
+                  <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    <CheckCircle size={10} /> 시스템 저장됨
+                  </span>
+                )}
+              </div>
+              {modalReply || isGeneratingReply ? (
                 <textarea
                   value={modalReply}
                   onChange={(e) => setModalReply(e.target.value)}
+                  placeholder="AI 답변을 생성하거나 직접 입력하세요..."
                   rows={8}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none transition-all shadow-inner"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-slate-400">
-                  <Sparkles size={32} className="mb-3 text-amber-300" />
-                  <p className="text-sm font-medium">AI 답변 생성 버튼을 눌러주세요</p>
-                </div>
-              )}
-              {replySaved && (
-                <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold">
-                  <CheckCircle size={14} />답변이 DB에 저장되었습니다.
+                <div className="flex flex-col items-center justify-center py-16 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                  <Sparkles size={32} className="mb-3 text-amber-300 animate-pulse" />
+                  <p className="text-sm font-medium text-slate-400">아래 버튼을 눌러 AI 답변을 생성하세요</p>
                 </div>
               )}
             </div>
