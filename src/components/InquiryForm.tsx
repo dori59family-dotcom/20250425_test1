@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, Loader2, Save, User, FileText, CheckCircle2, AlertCircle, Building2, Sparkles } from 'lucide-react';
+import { Send, Loader2, Save, User, FileText, CheckCircle2, AlertCircle, Building2, Sparkles, ShieldCheck } from 'lucide-react';
 import { classifyInquiry } from '../lib/gemini';
 import { saveInquiry } from '../lib/supabase';
 import type { GeminiResponse } from '../types/inquiry';
@@ -264,7 +264,3 @@ const InquiryForm: React.FC = () => {
 };
 
 export default InquiryForm;
-
-// ShieldCheck icon import fix
-import { ShieldCheck as ShieldCheckIcon } from 'lucide-react';
-const ShieldCheck = ShieldCheckIcon;
