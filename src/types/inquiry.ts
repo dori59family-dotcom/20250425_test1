@@ -10,8 +10,15 @@ export interface InquiryData {
   summary: string;
   department: string;
   script: string;
-  reply?: string | null;
-  replied_at?: string | null;
+  // 답변 데이터는 이제 별도 인터페이스로 관리하거나 조인해서 가져옴
+  replies?: ReplyData[]; 
+}
+
+export interface ReplyData {
+  id?: number;
+  inquiry_id: number;
+  created_at?: string;
+  reply_text: string;
 }
 
 export interface GeminiResponse {
