@@ -92,15 +92,19 @@ const InquiryForm: React.FC = () => {
         inquiry: inquiryText,
         ...result,
       });
-      // 저장 성공 시 모든 입력 및 분석 상태 초기화
+      // 저장 성공 알림
+      alert(`✅ 성공적으로 저장되었습니다!\n접수번호: ${receiptNumber}`);
+      
       setSaveSuccess(receiptNumber);
       setShowEmailModal(false);
       setInquiryText('');
       setCustomerEmail('');
       setResult(null); 
-      setQuestions([]); // 추천 질문도 초기화
+      setQuestions([]); 
     } catch (err) {
-      setError(err instanceof Error ? err.message : '저장 도중 오류가 발생했습니다.');
+      const msg = err instanceof Error ? err.message : '알 수 없는 오류';
+      alert(`❌ 저장 실패: ${msg}`);
+      setError(`저장 실패: ${msg}`);
     } finally {
       setIsSaving(false);
     }
